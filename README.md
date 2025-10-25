@@ -172,6 +172,8 @@ ai-news-agent/
 │   │   ├── workflows/
 │   │   │   └── daily-news.workflow.ts# Main workflow
 │   │   └── index.ts                  # Mastra configuration
+│   ├── utils/
+│   │   └── emailTemplate.ts          # Email HTML template generation
 │   ├── lib/
 │   │   └── articles.db.ts            # Supabase database client
 │   ├── index.ts                      # Main entry point
@@ -248,7 +250,7 @@ const result = await newsApiTool.execute({
 
 ### Customize Email Template
 
-Edit the HTML template in `src/mastra/workflows/daily-news.workflow.ts` in the `sendEmailStep`.
+Edit the email template function in `src/utils/emailTemplate.ts` to modify the HTML content and styling of the daily news digest email.
 
 ### Change AI Model
 
