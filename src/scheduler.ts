@@ -18,7 +18,8 @@ export function startScheduler() {
         throw new Error('dailyNewsWorkflow not found');
       }
 
-      const result = await workflow.execute({});
+      const run = await workflow.createRunAsync();
+      const result = await run.start({ inputData: {} });
       
       console.log(`[${new Date().toISOString()}] Workflow completed successfully`);
       console.log('Result:', JSON.stringify(result, null, 2));
@@ -44,7 +45,8 @@ export async function runWorkflowNow() {
         throw new Error('dailyNewsWorkflow not found');
       }
 
-    const result = await workflow.execute({});
+    const run = await workflow.createRunAsync();
+    const result = await run.start({ inputData: {} });
     console.log('Workflow completed successfully');
     console.log('Result:', JSON.stringify(result, null, 2));
     return result;
