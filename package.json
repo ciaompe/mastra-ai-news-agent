@@ -1,0 +1,47 @@
+{
+  "name": "ai-news-agent",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "mastra dev",
+    "build": "mastra build",
+    "start": "mastra start",
+    "scheduler": "tsx src/index.ts",
+    "scheduler:now": "tsx src/index.ts --now"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.42",
+    "@supabase/supabase-js": "^2.45.0",
+    "@mastra/core": "^0.20.0",
+    "@mastra/libsql": "^0.15.1",
+    "@mastra/loggers": "^0.10.15",
+    "@mastra/memory": "^0.15.5",
+    "@types/nodemailer": "^7.0.2",
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "date-fns": "^2.30.0",
+    "dotenv": "^17.2.3",
+    "natural": "^6.12.0",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^7.0.9",
+    "resend": "^6.2.2",
+    "rss-parser": "^3.13.0",
+    "sentiment": "^5.0.2",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.0",
+    "mastra": "^0.14.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
