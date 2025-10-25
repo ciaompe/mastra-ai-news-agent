@@ -15,12 +15,14 @@ An automated AI news aggregator that fetches the latest AI and machine learning 
 ## Architecture
 
 ### Agents
+- **Filter Agent**: Filters out articles that are not related to AI and Machine Learning
 - **Summarize Agent**: Dedicated LLM agent for creating concise article summaries
 - **News Agent**: Orchestrates news fetching, duplicate checking, and email sending
 
 ### Tools
 - **NewsAPI Tool**: Fetches AI news articles from NewsAPI.org
-- **Database Tool**: Checks and stores processed articles in Supabase PostgreSQL
+- **Check Article Tool**: Checks if an article has already been processed by URL or by matching title + publication date
+- **Save Article Tool**: Saves a processed article to the database
 - **Email Tool**: Sends emails via Resend
 
 ### Workflow
