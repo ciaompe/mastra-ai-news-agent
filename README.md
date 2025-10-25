@@ -186,15 +186,12 @@ ai-news-agent/
 ### Daily Workflow
 
 1. **Fetch News**: Retrieves top 20 AI articles from NewsAPI using keywords like "artificial intelligence", "machine learning", "AI", and "deep learning"
-
-2. **Check Duplicates**: Queries the Supabase database to identify articles that haven't been processed yet
-
-3. **Summarize Articles**: For each new article:
+2. **Filter Articles**: Filters out articles that have already been processed by URL or by matching title + publication date
+3. **Verify Relevance**: Verifies if the article is relevant to AI and Machine Learning
+4. **Summarize Articles**: For each new article:
    - Sends article content to the Summarize Agent
    - Generates a 2-3 sentence summary
-   - Stores article metadata in Supabase
-
-4. **Send Email**: Compiles all summaries into a beautiful HTML email and sends it via Resend
+5. **Send Email**: Compiles all summaries into a beautiful HTML email and sends it via Resend
 
 ### Database
 
