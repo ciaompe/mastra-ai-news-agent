@@ -271,7 +271,7 @@ If you see "Missing required environment variables", ensure your `.env` file exi
 
 1. Verify your Resend API key is valid
 2. Check that your sender email is verified in Resend dashboard
-3. Ensure `RECIPIENT_EMAIL` environment variable is set correctly
+3. Ensure `EMAIL_FROM` and `EMAIL_TO` environment variables are set correctly
 4. Check Resend dashboard for any delivery logs
 
 ### Database Connection Errors
