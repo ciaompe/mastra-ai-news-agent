@@ -1,6 +1,7 @@
 import { createWorkflow, createStep } from '@mastra/core/workflows';
 import { z } from 'zod';
 import { newsApiTool } from '../tools/newsapi.tool.js';
+import { hackerNewsApiTool } from '../tools/hackernews-api.tool.js';
 import { checkArticleTool } from '../tools/check-article.tool.js';
 import { saveArticleTool } from '../tools/save-article.tool.js';
 import { emailTool } from '../tools/email.tool.js';
@@ -8,7 +9,7 @@ import { summarizeAgent } from '../agents/summarize-agent.js';
 import { filterAgent } from '../agents/filter-agent.js';
 import { generateEmailTemplate } from '../../utils/emailTemplate.js';
 
-// Step 1: Fetch AI news articles
+// Step 1: Fetch AI news articles from NewsAPI
 const fetchNewsStep = createStep({
   id: 'fetch-news',
   description: 'Fetch latest AI news from NewsAPI',
@@ -25,6 +26,52 @@ const fetchNewsStep = createStep({
     return {
       articles: result.articles,
       totalResults: result.totalResults,
+    };
+  },
+});
+
+// Step 1b: Fetch AI news articles from Hacker News
+const fetchHnNewsStep = createStep({
+  id: 'fetch-hn-news',
+  description: 'Fetch latest AI news from Hacker News',
+  inputSchema: z.object({}),
+  outputSchema: z.object({
+    articles: z.array(z.any()),
+    totalResults: z.number(),
+  }),
+  execute: async () => {
+    const result = await hackerNewsApiTool.execute({
+      context: { limit: 20 },
+    });
+    
+    return {
+      articles: result.articles,
+      totalResults: result.totalResults,
+    };
+  },
+});
+
+// Step 1c: Merge articles from both sources
+const mergeArticlesStep = createStep({
+  id: 'merge-articles',
+  description: 'Merge articles from NewsAPI and Hacker News',
+  inputSchema: z.object({
+    newsApiArticles: z.array(z.any()),
+    hnArticles: z.array(z.any()),
+  }),
+  outputSchema: z.object({
+    articles: z.array(z.any()),
+    totalResults: z.number(),
+  }),
+  execute: async ({ inputData }) => {
+    const { newsApiArticles = [], hnArticles = [] } = inputData;
+    const mergedArticles = [...newsApiArticles, ...hnArticles];
+    
+    console.log(`✅ Merged ${newsApiArticles.length} NewsAPI articles with ${hnArticles.length} HN articles`);
+    
+    return {
+      articles: mergedArticles,
+      totalResults: mergedArticles.length,
     };
   },
 });
@@ -263,7 +310,7 @@ const sendEmailStep = createStep({
 // Create the workflow
 export const dailyNewsWorkflow = createWorkflow({
   id: 'daily-ai-news',
-  description: 'Daily AI news workflow that fetches, filters, summarizes, and emails AI news articles',
+  description: 'Daily AI news workflow that fetches from NewsAPI and Hacker News, filters, summarizes, and emails AI news articles',
   inputSchema: z.object({}),
   outputSchema: z.object({
     sent: z.boolean(),
@@ -272,7 +319,21 @@ export const dailyNewsWorkflow = createWorkflow({
     message: z.string().optional(),
   }),
 })
-  .then(fetchNewsStep)
+  .parallel([fetchNewsStep, fetchHnNewsStep])
+  .map(async ({ getStepResult }) => {
+    const newsApiResult = getStepResult(fetchNewsStep);
+    const hnResult = getStepResult(fetchHnNewsStep);
+    
+    return {
+      newsApiArticles: newsApiResult.articles,
+      hnArticles: hnResult.articles,
+    };
+  })
+  .then(mergeArticlesStep)
+  .map(async ({ inputData }) => ({
+    articles: inputData.articles,
+    totalResults: inputData.totalResults,
+  }))
   .then(filterNewArticlesStep)
   .then(verifyRelevanceStep)
   .then(summarizeArticlesStep)

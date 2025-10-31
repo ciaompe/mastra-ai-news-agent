@@ -55,4 +55,3 @@ process.on('SIGTERM', () => {
   console.log('✅ Scheduler stopped');
   process.exit(0);
 });
-

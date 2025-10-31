@@ -1,4 +1,3 @@
-
 import { Mastra } from '@mastra/core/mastra';
 import { PinoLogger } from '@mastra/loggers';
 import { LibSQLStore } from '@mastra/libsql';
@@ -7,12 +6,12 @@ import { newsAgent } from './agents/news-agent.js';
 import { filterAgent } from './agents/filter-agent.js';
 import { dailyNewsWorkflow } from './workflows/daily-news.workflow.js';
 
+// Create Mastra instance
 export const mastra = new Mastra({
   workflows: {
     dailyNewsWorkflow,
   },
   agents: {
-    
     newsAgent,
     summarizeAgent,
     filterAgent
